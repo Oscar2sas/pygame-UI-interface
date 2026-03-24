@@ -11,58 +11,24 @@ class Juego():
         self. ejecutando = True
         self.bkgColor = ((44, 62, 80))
 
-        self.texto = ""
-        self.font = pg.font.SysFont("system",60)
-
-        self.Rectangulo = pg.Rect(10,60,2,2)
-
-        self.inp = InputText(10,10,32,placeholder="Ancho")
-        self.inp2 = InputText(200,10,32,placeholder="Alto")
-        self.btn = Buttons(320,10,"Cambiar")
-        self.btn2 = Buttons(420,10,"Reset")
-
-        self.listaInp = [
-            (self.inp,self.CambiarAncho),
-            (self.inp2,self.CambiarAlto)
+        self.opcionesRB = [
+            RadioButton(20,20,"Opcion A",1),
+            RadioButton(20,50,"Opcion B",2),
+            RadioButton(20,80,"Opcion C",3),
+            RadioButton(20,110,"Opcion D",4),
+            RadioButton(20,140,"Opcion E",5),
+            RadioButton(20,170,"Opcion F",6),
+            RadioButton(20,200,"Opcion G",7)
         ]
 
-        self.listaBtn = [
-            (self.btn,self.CambiarMedida),
-            (self.btn2,self.ResetMedida)
-        ]
-
-    def CambiarAncho(self):
-        self.Rectangulo.w = int(self.inp.text)
-
-    def CambiarAlto(self):
-        self.Rectangulo.h = int(self.inp2.text)
-
-    def CambiarMedida(self):
-        if self.inp.text.isdigit() and self.inp2.text.isdigit():
-            self.Rectangulo.w = int(self.inp.text)
-            self.Rectangulo.h = int(self.inp2.text)
-        else:
-            print("Error")
-
-    def ResetMedida(self):
-        self.Rectangulo.w = 2
-        self.Rectangulo.h = 2
-
-        for inpt,_ in self.listaInp:
-            inpt.Reset()
+        self.opcionesRB[0].selected = True
 
     def ScreenUpdate(self):
 
         self.ventana.fill(self.bkgColor)
 
-        for inpt,_ in self.listaInp:
-            inpt.Render(self.ventana)
-
-        for btn,_ in self.listaBtn:
-            btn.Render(self.ventana)
-        
-        
-        pg.draw.rect(self.ventana,"red",self.Rectangulo)
+        for radiobtn in self.opcionesRB:
+            radiobtn.Render(self.ventana)
 
         pg.display.flip()
   
@@ -73,11 +39,11 @@ class Juego():
                 if evento.type == pg.QUIT:
                     self.ejecutando = False
 
-                for inpt,function in self.listaInp:
-                    inpt.check_active(evento,function)
-                
-                for btn,function in self.listaBtn:
-                    btn.Selecction(evento,function)
+                for radiobtn in self.opcionesRB:
+                    if radiobtn.checkClick(evento):
+                        for rb in self.opcionesRB:
+                            rb.selected = False
+                        radiobtn.selected = True
 
             self.ScreenUpdate()
             self.fps.tick(60)

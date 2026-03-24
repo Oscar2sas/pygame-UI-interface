@@ -107,3 +107,31 @@ class InputText:
     def Render(self,screen):
         pg.draw.rect(screen,self.color,self.txtBox, 2)
         screen.blit(self.txtRender,(self.txtBox.x+5,self.txtBox.y+2))
+
+class RadioButton:
+    def __init__(self,posX,posY,text,idselected,radio = 12):
+
+        self.id = idselected
+        self.text =text
+        self.font = pg.font.SysFont('arial',radio*2)
+        self.txtR = self.font.render(self.text,True,("black"))
+        self.radio = radio
+        self.position = (posX,posY)
+        self.selected = False
+        self.rect = pg.Rect(posX-radio,posY-radio,radio*2,radio*2)
+
+    def checkClick(self,event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                print(self.id)
+                return True
+            
+
+    def Render(self,screen):
+        pg.draw.circle(screen,(127, 140, 141),self.position,self.radio,2)
+        if self.selected:
+            pg.draw.circle(screen,(41, 128, 185),self.position,self.radio-6)
+
+        screen.blit(self.txtR,(self.position[0]+20,self.position[1]-self.radio-3))
+
+        
