@@ -109,29 +109,69 @@ class InputText:
         screen.blit(self.txtRender,(self.txtBox.x+5,self.txtBox.y+2))
 
 class RadioButton:
-    def __init__(self,posX,posY,text,idselected,radio = 12):
+    def __init__(self,posX,posY,text,idselected,radio = 8):
 
         self.id = idselected
+
         self.text =text
         self.font = pg.font.SysFont('arial',radio*2)
         self.txtR = self.font.render(self.text,True,("black"))
         self.radio = radio
         self.position = (posX,posY)
         self.selected = False
-        self.rect = pg.Rect(posX-radio,posY-radio,radio*2,radio*2)
+        anchoTotal = (radio*2) +20 +self.txtR.get_width()
+        self.rect = pg.Rect(posX-radio,posY-radio,anchoTotal,radio*2)
 
     def checkClick(self,event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
-                print(self.id)
                 return True
-            
+            return False
+
 
     def Render(self,screen):
         pg.draw.circle(screen,(127, 140, 141),self.position,self.radio,2)
         if self.selected:
-            pg.draw.circle(screen,(41, 128, 185),self.position,self.radio-6)
+            pg.draw.circle(screen,(41, 128, 185),self.position,self.radio//2)
 
-        screen.blit(self.txtR,(self.position[0]+20,self.position[1]-self.radio-3))
+        centrado = self.position[1] - (self.txtR.get_height() //2)
+        screen.blit(self.txtR,(self.position[0]+20,centrado))
+
+class RadioGroup:
+    def __init__(self,x,y,listaRB,radio = 12, espacio = None,defaul = 0):
+        self.botones = []
+        self.selected = None
+        espaciado = espacio if espacio else radio*3
+
+        for rb,(texto,idRB) in enumerate(listaRB):
+            posY = y + (rb*espaciado)
+            newRB = RadioButton(x,posY,texto,idRB,radio)
+            self.botones.append(newRB)
+
+        if self.botones:
+            self.botones[defaul].selected = True
+            self.selected = self.botones[defaul]
+
+    def checkEvent(self,event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            for radiobtn in self.botones:
+                if radiobtn.checkClick(event):
+                    for rb in self.botones:
+                        rb.selected = False
+                    radiobtn.selected = True
+                    self.selected = radiobtn
+                    return True
+        return False
+
+    def ObtenerSeleccion(self):
+        return self.selected.id if self.selected else None
+    
+    def Render(self,screen):
+        for rb in self.botones:
+            rb.Render(screen)
+
+    
+
+
 
         
