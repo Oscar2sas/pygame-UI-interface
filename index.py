@@ -5,39 +5,117 @@ from Inputs import *
 class Ejemplos:
     def __init__(self):
         pg.init()
-        self.ventana = pg.display.set_mode((640, 320))
-        pg.display.set_caption("Ejemplo de botones")
+        self.medidasVentana = (640, 320)
+        self.ventana = pg.display.set_mode(self.medidasVentana)
+        pg.display.set_caption("Pygame UI interfaces")
         self.fps = pg.time.Clock()
         self.ejecutando = True
         
+        theme = colorDarckTheme
         # Estado inicial
-        self.bkg_color = (44, 62, 80)
+        self.bkg_color = theme
 
-        btn1 = Buttons(10,40,"Saludar",padding_W=40,padding_H=20,colors=(142, 68, 173),font='consolas',font_size=36,box_shadow=2,border_w=2)
-        btn2 = Buttons(200,40,"Enviar",)
-        btn3 = Buttons(270,40,"Pulsa",padding_W=100,radius=20,colors= (44, 62, 80),box_shadow=2,border_w=1,border_color=(41, 128, 185))
-        btn4 = Buttons(450,40,"Cancelar",font_color=(149, 165, 166),padding_W=30,padding_H=20,radius=3,colors=(44, 62, 80),box_shadow=2,border_w=1,border_color=(192, 57, 43))
+        self.rectanguloMuestra = pg.Rect(300,10,50,50)
+        self.colorRectanguloMuestra = (200,80,80)
+        self.colorBordeMuestra = (200,200,200)
 
-        self.lista = [
-            btn1,
-            btn2,
-            btn3,
-            btn4
+        self.inputAncho = InputText(10,10,placeholder="Ancho") 
+        self.inputAlto = InputText(140,10,placeholder="Alto") 
+
+        self.botonCambiarTamaño = Buttons(10,50,"Cambiar Tamaño",theme=theme) 
+
+        self.sliderR = Slider(10,100,180,0,255,200,"Rojo")
+        self.sliderG = Slider(10,125,180,0,255,80,"Verde")
+        self.sliderB = Slider(10,150,180,0,255,80,"Azul")
+
+        listaOpciones = [
+            ("Relleno",1),
+            ("Borde",2),
+            ("Color de fondo",3)
         ]
+
+        self.opciones = RadioGroup(15,180,listaOpciones,espacio=30,defaul=0)
+
+        self.chek = checkBox(10,280,"Pantalla Completa",1)
+
+    def cambiar_tamaño(self):
+        print(self.inputAlto.text)
+        if self.inputAlto.text == '' or self.inputAncho.text == '':
+            print('se debe colocar los valores')
+            return
+        else:
+            self.rectanguloMuestra = pg.Rect(300,10,int(self.inputAncho.text),int(self.inputAlto.text))
+            print('hola')
+
+    def set_sliders(self):
+        seleccion = self.opciones.ObtenerSeleccion()
+
+        if seleccion == 1:
+            color = self.colorRectanguloMuestra
+        elif seleccion == 2:
+            color = self.colorBordeMuestra
+        elif seleccion == 3:
+            color =  self.bkg_color
+        else:
+            return
+        
+        self.sliderR.set_pos(color[0])
+        self.sliderG.set_pos(color[1])
+        self.sliderB.set_pos(color[2])
        
     def manejar_eventos(self):
         for evento in pg.event.get():
             if evento.type == pg.QUIT:
                 self.ejecutando = False
 
-            for btn in self.lista:
-               btn.check_event(evento) 
+            self.inputAlto.check_active(evento)
+            self.inputAncho.check_active(evento)
+
+            self.botonCambiarTamaño.check_event(evento,self.cambiar_tamaño)
+
+            self.sliderR.checkEvent(evento)
+            self.sliderG.checkEvent(evento)
+            self.sliderB.checkEvent(evento)
+
+            if self.opciones.checkEvent(evento):
+                self.set_sliders()
+
+            if self.chek.checkEvent(evento):
+                if self.chek.state:
+                    pg.display.set_mode((0,0),pg.FULLSCREEN)
+                else:
+                    pg.display.set_mode(self.medidasVentana)
+
+            seleccion = self.opciones.ObtenerSeleccion()
+
+            self.colorActual = (self.sliderR.getPosition(),self.sliderG.getPosition(),self.sliderB.getPosition())
+            if seleccion == 1:    
+                self.colorRectanguloMuestra = self.colorActual
+            elif seleccion == 2:
+                self.colorBordeMuestra = self.colorActual
+            elif seleccion == 3:
+                self.bkg_color = self.colorActual
+
 
     def dibujar(self):
         self.ventana.fill(self.bkg_color)
 
-        for btn in self.lista:
-            btn.Render(self.ventana)
+        self.inputAlto.Render(self.ventana)
+        self.inputAncho.Render(self.ventana)
+
+        self.botonCambiarTamaño.Render(self.ventana)
+
+        self.sliderR.Render(self.ventana)
+        self.sliderG.Render(self.ventana)
+        self.sliderB.Render(self.ventana)
+
+        self.opciones.Render(self.ventana)
+
+        self.chek.Render(self.ventana)
+
+
+        pg.draw.rect(self.ventana,self.colorRectanguloMuestra,self.rectanguloMuestra,0,12)
+        pg.draw.rect(self.ventana,self.colorBordeMuestra,self.rectanguloMuestra,2,12)
 
         pg.display.flip()
 

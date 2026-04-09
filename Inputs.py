@@ -1,19 +1,31 @@
 import pygame as pg
 
+
+colorTheme = (149, 165, 166)
+colorDarckTheme = (45, 52, 54)
+
 class Buttons:
     def __init__(self,pos_X,pos_Y,text = "Button",colors = (149, 165, 166),font = "arial",font_size = 20,
                  font_color = "White",padding_W = 5,padding_H = 5,radius = 0,box_shadow = 0,
-                 border_w = 0,border_color = None):
+                 border_w = 0,border_color = None,theme = None):
         
         def limit_color(color): return max(0,min(255,color))
         
         self.posX = pos_X
         self.posY = pos_Y
-        self.boxShadow = box_shadow
-        self.paddingW = padding_W
-        self.paddingH = padding_H
-        self.radius = radius
-        self.borderW = border_w
+
+        if theme == colorDarckTheme:
+            self.boxShadow = 1
+            self.paddingW = 20
+            self.paddingH = 20
+            self.radius = 8
+            self.borderW = 1
+        else : 
+            self.boxShadow = box_shadow
+            self.paddingW = padding_W
+            self.paddingH = padding_H
+            self.radius = radius
+            self.borderW = border_w
         self.pressed = False
         self.hover = False
 
@@ -22,12 +34,21 @@ class Buttons:
         self.font = pg.font.SysFont(font,font_size)
         self.txtR = self.font.render(self.text,True,font_color)
 
-        #Colores cunado el cursos esa encima del curso o no
-        self.ColorDC = colors
-        self.ColorAC = tuple(limit_color(color + 25) for color in colors)
-        self.colorShadow = tuple(limit_color(color -40) for color in colors)
+        if theme == colorDarckTheme:
+            self.ColorDC = colorDarckTheme
+            self.ColorAC = tuple(limit_color(color + 25) for color in self.ColorDC)
+            self.colorShadow = tuple(limit_color(color -40) for color in self.ColorDC)
+        else:
+            #Colores cunado el cursos esa encima del curso o no
+            self.ColorDC = colors
+            self.ColorAC = tuple(limit_color(color + 25) for color in colors)
+            self.colorShadow = tuple(limit_color(color -40) for color in colors)
+
         if border_color is None:
-            self.borderColor = tuple(limit_color(color +10) for color in colors)
+            if theme == colorDarckTheme:
+                self.borderColor = tuple(limit_color(color +10) for color in self.ColorDC)
+            else:
+                self.borderColor = tuple(limit_color(color +10) for color in colors)
         else:
             self.borderColor = border_color
 
@@ -35,7 +56,7 @@ class Buttons:
 
         self.resize()
 
-    def check_event(self,event,func = lambda : print("NONE")):
+    def check_event(self,event,func = lambda : None,param = None):
        # 1. Actualizamos el hover siempre que el mouse se mueva
         if event.type == pg.MOUSEMOTION:
             self.hover = self.btnBox.collidepoint(event.pos)
@@ -49,7 +70,10 @@ class Buttons:
                 self.pressed = True
             if event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 if self.pressed:
-                    func()
+                    if param is not None:
+                        func(param)
+                    else:
+                        func()
                     self.pressed = False
                     return True 
         
@@ -231,8 +255,7 @@ class Slider:
         self.font = pg.font.SysFont('arial',16)
         self.ypos = y
 
-        self.xpos = x + (self.valInit - self.valMin) / (self.valMax-self.valMin) * width
-        self.poscircle = [self.xpos,y+2.5]
+        self.set_pos(valInit)
 
         self.agarrado = False
 
@@ -249,6 +272,11 @@ class Slider:
             self.poscircle[0] = max(self.bar.left,min(event.pos[0],self.bar.right))
 
     def Reset(self):
+        self.poscircle = [self.xpos,self.ypos+2.5]
+
+    def set_pos(self,valor):
+        self.valInit = valor
+        self.xpos = 10 + (self.valInit - self.valMin) / (self.valMax-self.valMin) * 180
         self.poscircle = [self.xpos,self.ypos+2.5]
 
     def getPosition(self):
@@ -292,11 +320,11 @@ class checkBox:
         self.state = self.defaultState
 
     def Render(self,screen):
-        pg.draw.rect(screen,"black",self.checkbBox,2,6)
+        pg.draw.rect(screen,"black",self.checkbBox,2,2)
 
         if self.state:
             margin = self.size // 4
             check = self.checkbBox.inflate(-margin*2,-margin*2)
-            pg.draw.rect(screen,(41, 128, 185),check,0,3)
+            pg.draw.rect(screen,(41, 128, 185),check,0,2)
 
         screen.blit(self.texR,(self.checkbBox.right+10,self.checkbBox.y+2))
