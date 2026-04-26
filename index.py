@@ -1,27 +1,29 @@
 import pygame as pg
 import sys
-from Inputs import *
+from widgets import *
 from Themes import THEMES
 
 class Ejemplos:
     def __init__(self):
         pg.init()
-        self.medidasVentana = (640, 320)
+        self.medidasVentana = (640, 400)
         self.ventana = pg.display.set_mode(self.medidasVentana)
         pg.display.set_caption("Pygame UI interfaces")
         self.fps = pg.time.Clock()
         self.ejecutando = True
         
-        theme = "light"
+        theme = "dark"
         # Estado inicial
         self.bkg_color = THEMES[theme].get("color")
+
+        self.titulo = Label(theme=theme, text = "Esperando Accion",x = 10,y = 300,font_size = 23)
 
         self.rectanguloMuestra = pg.Rect(300,10,50,50)
         self.colorRectanguloMuestra = (200,80,80)
         self.colorBordeMuestra = (200,200,200)
 
-        self.inputAncho = InputText(10,10,placeholder="Ancho") 
-        self.inputAlto = InputText(140,10,placeholder="Alto") 
+        self.inputAncho = InputText(10,10,placeholder="Ancho",theme=theme) 
+        self.inputAlto = InputText(140,10,placeholder="Alto",theme=theme) 
 
         self.botonCambiarTamaño = Buttons(10,50,"Cambiar Tamaño",color = (0, 151, 230),theme=theme) 
 
@@ -35,16 +37,17 @@ class Ejemplos:
             ("Color de fondo",3)
         ]
 
-        self.opciones = RadioGroup(15,180,listaOpciones,espacio=30,defaul=0)
+        self.opciones = RadioGroup(15,180,listaOpciones,espacio=30,defaul=0,theme=theme)
 
-        self.chek = checkBox(10,280,"Pantalla Completa",1)
+        self.chek = CheckBox(10,280,"Pantalla Completa",1,theme = theme)
 
     def cambiar_tamaño(self):
         if self.inputAlto.text == '' or self.inputAncho.text == '':
-            print('debes colocar ambos valores')
-            return
+            self.titulo.update_text('debes colocar ambos valores')
+            return 
         else:
             self.rectanguloMuestra = pg.Rect(300,10,int(self.inputAncho.text),int(self.inputAlto.text))
+            self.titulo.update_text('Se cambio el tamaño')
 
     def set_sliders(self):
         seleccion = self.opciones.ObtenerSeleccion()
@@ -111,10 +114,14 @@ class Ejemplos:
         self.opciones.Render(self.ventana)
 
         self.chek.Render(self.ventana)
+        
 
 
         pg.draw.rect(self.ventana,self.colorRectanguloMuestra,self.rectanguloMuestra,0,12)
         pg.draw.rect(self.ventana,self.colorBordeMuestra,self.rectanguloMuestra,2,12)
+
+        self.titulo.Render(self.ventana)
+
         pg.display.flip()
 
     def ejecutar(self):
