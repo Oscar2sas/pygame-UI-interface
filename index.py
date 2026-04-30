@@ -25,7 +25,7 @@ class Ejemplos:
         self.inputAncho = InputText(10,10,placeholder="Ancho",theme=theme) 
         self.inputAlto = InputText(140,10,placeholder="Alto",theme=theme) 
 
-        self.botonCambiarTamaño = Buttons(10,50,"Cambiar Tamaño",color = (0, 151, 230),theme=theme) 
+        self.botonCambiarTamaño = Buttons(10,50,"Cambiar Tamaño",theme=theme) 
 
         self.sliderR = Slider(10,100,180,0,255,200,"Rojo",theme=theme)
         self.sliderG = Slider(10,125,180,0,255,80,"Verde",theme=theme)

@@ -7,7 +7,7 @@ class Label:
             thme = THEMES[theme]
             self.color_bg = thme.get("color")
             self.ftn = thme.get("font")
-            self.ftn_color = kwargs.get("color") or thme.get("font_color")
+            self.ftn_color = kwargs.get("font_color") or thme.get("font_color")
         else:
             self.color_bg = kwargs.get("color",(189, 195, 199))
             self.ftn = kwargs.get("font","arial")
@@ -32,18 +32,18 @@ class Buttons:
 
         if theme and theme in THEMES:
             thme = THEMES[theme]
-            self.color_bg = thme.get("color")
-            self.color_hover = thme.get("color_hover")
+            self.color_bg = kwargs.get("color") or thme.get("color")
+            self.color_hover = kwargs.get("color_hover") or thme.get("color_hover")
             self.color_shadow = thme.get("color_shadow")
-            self.color_border = thme.get("border_color")
+            self.color_border = kwargs.get("border_color") or thme.get("border_color")
             self.box_shadow = thme.get("box_shadow")
-            self.padding_width = thme.get("padding_w")
-            self.padding_hight = thme.get("padding_h")
-            self.radius = thme.get("radius")
-            self.border_width = thme.get("border_w")
-            self.ftn = thme.get("font")
-            self.ftn_size = thme.get("font_size")
-            self.ftn_color = thme.get("font_color")
+            self.padding_width = kwargs.get("padding_w") or thme.get("padding_w")
+            self.padding_hight = kwargs.get("padding_h") or thme.get("padding_h")
+            self.radius = kwargs.get("radius") or thme.get("radius")
+            self.border_width = kwargs.get("border_w") or thme.get("border_w")
+            self.ftn = kwargs.get("font") or thme.get("font")
+            self.ftn_size = kwargs.get("font_size") or thme.get("font_size")
+            self.ftn_color = kwargs.get("font_color") or thme.get("font_color")
         else:
             self.color_bg = kwargs.get("color",(189, 195, 199))
             self.color_hover = kwargs.get("color",(189, 195, 199))
