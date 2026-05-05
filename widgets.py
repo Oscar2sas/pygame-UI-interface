@@ -10,7 +10,7 @@ class Label:
             self.ftn_color = kwargs.get("font_color") or thme.get("font_color")
         else:
             self.color_bg = kwargs.get("color",(189, 195, 199))
-            self.ftn = kwargs.get("font","arial")
+            self.ftn = kwargs.get("font","Franklin Gothic Medium")
             self.ftn_color = kwargs.get("font_color","black")
         
         self.pos_x = kwargs.get("x")
@@ -20,9 +20,10 @@ class Label:
         self.font = pg.font.SysFont(self.ftn,self.font_size)
         self.textRender = self.font.render(self.text,True,self.ftn_color)
 
-    def update_text(self,value):
+    def update_text(self,value,**kwargs):
         self.text = value
-        self.textRender = self.font.render(self.text,True,self.ftn_color)
+        ftn_color = kwargs.get('font_color') or self.ftn_color
+        self.textRender = self.font.render(self.text,True,ftn_color)
         return self.textRender
     
     def Render(self,screen):
@@ -45,18 +46,18 @@ class Buttons:
             self.ftn_size = kwargs.get("font_size") or thme.get("font_size")
             self.ftn_color = kwargs.get("font_color") or thme.get("font_color")
         else:
-            self.color_bg = kwargs.get("color",(189, 195, 199))
-            self.color_hover = kwargs.get("color",(189, 195, 199))
-            self.color_shadow = kwargs.get("color",(189, 195, 199))
-            self.color_border = kwargs.get("color",(189, 195, 199))
+            self.color_bg = kwargs.get("color",(180,180,180))
+            self.color_hover = kwargs.get("color_hover",(200,200,200))
+            self.color_shadow = kwargs.get("color_shadow",(80,80,80))
+            self.color_border = kwargs.get("color_border",(70,70,70))
             self.box_shadow = kwargs.get("box_shadow",1)
-            self.padding_width = kwargs.get("padding_w",5)
-            self.padding_hight = kwargs.get("padding_h",5)
-            self.radius = kwargs.get("radius",0)
-            self.border_width = kwargs.get("border_w",0)
-            self.ftn = kwargs.get("font","arial")
+            self.padding_width = kwargs.get("padding_w",10)
+            self.padding_hight = kwargs.get("padding_h",10)
+            self.radius = kwargs.get("radius",2)
+            self.border_width = kwargs.get("border_w",1)
+            self.ftn = kwargs.get("font",'Franklin Gothic Medium')
             self.ftn_size = kwargs.get("font_size",15)
-            self.ftn_color = kwargs.get("font_color","black")
+            self.ftn_color = kwargs.get("font_color",(20,20,20))
 
         self.posX = pos_X
         self.posY = pos_Y
@@ -144,37 +145,43 @@ class InputText:
             self.colorDesactivo = thme.get("color_txt_off")
             self.backgraud_color = thme.get("color_bg_txt")
             self.radius = thme.get("radius")
+            self.place_holder_color = (80,80,80)
         else:
-            self.color_hover = kwargs.get("color_active",(150,20,20))
-            self.colorDesactivo = kwargs.get("color_desactive",(80,80,80))
+            self.color_hover = kwargs.get("color_active",(9, 132, 227))
+            self.colorDesactivo = kwargs.get("color_desactive",(20,20,20))
             self.backgraud_color = kwargs.get("color",(200,200,200))
             self.radius = kwargs.get("radius",2)
+            self.place_holder_color = (80,80,80)
 
         self.placeholder = placeholder
         self.text = ""
-        self.ftn = kwargs.get('font') 
-        self.ftn_size = kwargs.get('font_size',20)
+        self.ftn = kwargs.get('font','Franklin Gothic Medium') 
+        self.ftn_size = kwargs.get('font_size',15)
 
         
 
         #colores
         self.color = self.colorDesactivo
+        self.text_color = self.colorDesactivo
 
         self.txtBox = pg.Rect(posX,posY,140,self.ftn_size + 5)
         self.activo = False
 
-        self.label = Label(self.thm ,font = self.ftn,font_size = self.ftn_size, text = self.text ,font_color= self.color)
+        self.label = Label(self.thm ,font = self.ftn,font_size = self.ftn_size, text = self.text ,font_color= self.text_color)
 
         self.UpdateText()
         
     def UpdateText(self):
 
         placeText = self.text if self.text or self.activo else self.placeholder
-
         self.color = self.color_hover if self.activo else self.colorDesactivo
 
-        
-        self.label_render = self.label.update_text(placeText)
+        if placeText == self.placeholder:
+            self.text_color = self.place_holder_color
+        else:
+            self.text_color = self.colorDesactivo
+
+        self.label_render = self.label.update_text(placeText,font_color = self.text_color)
 
         width = max(100,self.label_render.get_width()+10)
         self.txtBox.w = width
@@ -356,7 +363,7 @@ class Slider:
         pg.draw.circle(screen,self.color_circle,self.poscircle,self.radioBar)
         pg.draw.circle(screen,self.color_border,self.poscircle,self.radioBar,self.border)
 class CheckBox:
-    def __init__(self,x,y,text,id,state = False,size = 14, theme = None):
+    def __init__(self,x,y,text,id,state = False,size = 14, theme = None,**kwargs):
             
         if theme and theme in THEMES:
             thme = THEMES[theme]
@@ -364,12 +371,18 @@ class CheckBox:
             self.color_active = thme.get("border_color")
             self.text_color = thme.get("font_color")
             self.font = thme.get("font")
+        else:
+            self.color = kwargs.get("color_shadow",(40,40,40))
+            self.color_active = kwargs.get("border_color",(41, 128, 185))
+            self.text_color = kwargs.get("font_color",(10,10,10))
+            self.font = kwargs.get("font","Franklin Gothic Medium")
             
         self.text = text
         self.defaultState = state
         self.state = state
         self.size = size
         self.fontsize = 16
+        self.radius = kwargs.get('radius',1)
 
         self.checkbBox = pg.Rect(x,y,size,size)
 
@@ -377,7 +390,7 @@ class CheckBox:
         self.label = Label(theme ,font = self.font,font_size = size, text = self.text ,font_color= self.text_color)
         self.label_render = self.label.update_text(text)
 
-        anchoTotal = self.checkbBox.w + 10 + self.label_render.get_width()
+        anchoTotal = self.checkbBox.w + 5 + self.label_render.get_width()
         self.content = pg.Rect(x,y,anchoTotal,size)
 
     def checkEvent(self,event):
@@ -395,9 +408,9 @@ class CheckBox:
         if self.state:
             margin = self.size // 4
             check = self.checkbBox.inflate(-margin*2,-margin*2)
-            pg.draw.rect(screen,self.color_active,self.checkbBox,2,2)
-            pg.draw.rect(screen,self.color_active,check,0,2)
+            pg.draw.rect(screen,self.color_active,self.checkbBox,1,self.radius)
+            pg.draw.rect(screen,self.color_active,check,0,self.radius)
         else:
-            pg.draw.rect(screen,self.color,self.checkbBox,2,2)
+            pg.draw.rect(screen,self.color,self.checkbBox,1,self.radius)
 
-        screen.blit(self.label_render,(self.checkbBox.right+10,self.checkbBox.y))
+        screen.blit(self.label_render,(self.checkbBox.right+5,self.checkbBox.y-2))

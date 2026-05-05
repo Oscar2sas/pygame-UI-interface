@@ -17,7 +17,7 @@ THEMES = {
         "radius" : 4,
         "border_w" : 1,
         "font" : "Arial",
-        "font_size" : 12,
+        "font_size" : 15,
         "font_color" : "white",
         #estilos para entrada de texto
         "color_bg_txt" : (set_color((45, 52, 54),-10)),
