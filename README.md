@@ -39,38 +39,31 @@ import sys
 from widgets import *
 from Themes import *
 
+#variables de inicio de pygame
 pg.init()
-screen_size = (400,130)
+screen_size = (400,85)
 screen = pg.display.set_mode(screen_size)
 fps = pg.time.Clock()
 run = True
 
-theme = 'dark'
-bg_color = THEMES[theme].get('color')
+color = (180,180, 180)
 
 #variables y componentes
-txt = InputText(60,10,'Nombre...',theme=theme)
-txt_label = Label(x=10,y=10,font_size=15,text='Nombre:',theme=theme)
-btn_aceptar = Buttons(280,45,'Imprimir',theme=theme)
-btn_cancelar = Buttons(350,45,'Salir',theme=theme,border_color=(255,0,0))
-check_fps = CheckBox(10,90,'Mostrar FPS: ',1,theme=theme)
-fps_label = Label(x=10,y=110,font_size=15,text='',theme=theme)
-nombre_label = Label(x=165,y=10,font_size=15,text='',theme=theme)
+txt = InputText(70,10,'Nombre...')#Entrada de Texto
+txt_label = Label(x=10,y=10,font_size=15,text='Nombre:')#El texto por encima del Input
+btn_imprimir = Buttons(270,45,'Imprimir',theme=theme)#Boton para imprimir un mensaje
+btn_salir = Buttons(345,45,'Salir',border_color=(255,0,0))#Boton para salir
+nombre_label = Label(x=175,y=10,font_size=15,text='')#El Texto que contiene el nombre Introducido en el Input
 
 #Lista con todos los elementos de la ventana
-components = [txt,txt_label,btn_aceptar,btn_cancelar,check_fps,fps_label,nombre_label]
+components = [txt,txt_label,btn_imprimir,btn_salir,nombre_label]
 
 #Funciones
-def MostrarFPS():
-    global fps_label,fps
-
-    fps_label.update_text(str(int(fps.get_fps())))
-    return
-
 def MostrarNombre():
     nombre_label.update_text(f'tu nombre es: {txt.text}')
     return
 
+#bucle principal o "GameLoop"
 while run:
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -78,23 +71,15 @@ while run:
 
         #Chequeamos los eventos
         txt.check_active(event)
-        btn_aceptar.check_event(event,MostrarNombre)
-        if btn_cancelar.check_event(event):
+        btn_imprimir.check_event(event,MostrarNombre)
+        if btn_salir.check_event(event):
             run = False
-        check_fps.checkEvent(event)
 
-    screen.fill(bg_color)
+    screen.fill(color)
 
     #dibijamos los elementos de la lista de a 1
     for com in components:
         com.Render(screen)
-
-    #verificamo el estado del check y segun eso mostramos o no los fps
-    if check_fps.state == True:
-        MostrarFPS()
-    else:
-        fps_label.update_text('')
-
 
     pg.display.flip()
     fps.tick(60)
