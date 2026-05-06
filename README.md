@@ -6,6 +6,8 @@
 
 Una librería modular y ligera diseñada bajo el paradigma de **Programación Orientada a Objetos (POO)** para simplificar la creación de interfaces gráficas (GUI) en Pygame.
 
+## Indice
+1. [Button](#componente_Boton)
 ---
 
 ## 📸 Demo
@@ -51,7 +53,7 @@ color = (180,180, 180)
 #variables y componentes
 txt = InputText(70,10,'Nombre...')#Entrada de Texto
 txt_label = Label(x=10,y=10,font_size=15,text='Nombre:')#El texto por encima del Input
-btn_imprimir = Buttons(270,45,'Imprimir',theme=theme)#Boton para imprimir un mensaje
+btn_imprimir = Buttons(270,45,'Imprimir')#Boton para imprimir un mensaje
 btn_salir = Buttons(345,45,'Salir',border_color=(255,0,0))#Boton para salir
 nombre_label = Label(x=175,y=10,font_size=15,text='')#El Texto que contiene el nombre Introducido en el Input
 
