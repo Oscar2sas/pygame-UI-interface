@@ -95,7 +95,7 @@ sys.exit()
 
 ## 📖 Documentación de Componentes
 
-### `Button`
+## Button
 La clase base para interactividad táctil/ratón.
 - **Parámetros:** `x`, `y`, `width`, `height`, `text`, `color`.
 - **Métodos clave:** `draw(surface)`, `check_click(pos)`.
