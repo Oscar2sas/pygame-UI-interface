@@ -7,7 +7,13 @@
 Una librería modular y ligera diseñada bajo el paradigma de **Programación Orientada a Objetos (POO)** para simplificar la creación de interfaces gráficas (GUI) en Pygame.
 
 ## Indice
+Navega por este archivo encontrando lo que nesecitas.
+- Componentes:
 1. [Button](#button)
+2. [InputText](#inputtext)
+3. [RadioGroup](#radiogroup)
+4. [Slider](#button)
+5. [Checkbox](#button)
 ---
 
 ## 📸 Demo
@@ -95,17 +101,23 @@ sys.exit()
 
 ## 📖 Documentación de Componentes
 
-## Button
+### Button
 La clase base para interactividad táctil/ratón.
 - **Parámetros:** `x`, `y`, `width`, `height`, `text`, `color`.
 - **Métodos clave:** `draw(surface)`, `check_click(pos)`.
 
-### `InputText`
+### InputText
 Cuadro de entrada para capturar texto del usuario.
 - **Estado:** Maneja automáticamente el estado de "enfocado" al hacer click.
 
 ### `RadioGroup`
 Contenedor para múltiples opciones donde solo una puede estar activa.
+
+### Slider
+Seleccionar mediante un deslizador
+
+### CheckBox
+Una opcion para encender o apagar 
 
 ---
 
