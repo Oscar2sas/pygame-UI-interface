@@ -7,7 +7,7 @@
 Una librería modular y ligera diseñada bajo el paradigma de **Programación Orientada a Objetos (POO)** para simplificar la creación de interfaces gráficas (GUI) en Pygame.
 
 ## Indice
-1. [Button](#componente_Boton)
+1. [Button](#button)
 ---
 
 ## 📸 Demo
