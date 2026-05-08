@@ -1,6 +1,8 @@
 import pygame as pg
 from Themes import *
 
+
+
 class Label:
     def __init__(self, theme = None, **kwargs):
         if theme and theme in THEMES:
@@ -13,23 +15,31 @@ class Label:
             self.ftn = kwargs.get("font","Franklin Gothic Medium")
             self.ftn_color = kwargs.get("font_color","black")
         
-        self.pos_x = kwargs.get("x")
-        self.pos_y = kwargs.get("y")
-        self.font_size = kwargs.get("font_size")
+        self.pos_x = kwargs.get("x",10)
+        self.pos_y = kwargs.get("y",10)
+        self.font_size = kwargs.get("font_size",15)
         self.text = kwargs.get("text")
         self.font = pg.font.SysFont(self.ftn,self.font_size)
         self.textRender = self.font.render(self.text,True,self.ftn_color)
+        #wid = self.textRender.get_width()
+        #hei = self.textRender.get_height()
+        #print(wid,hei)
+        #self.contain = pg.Rect(self.pos_x,self.pos_y,wid,hei)
 
     def update_text(self,value,**kwargs):
         self.text = value
         ftn_color = kwargs.get('font_color') or self.ftn_color
         self.textRender = self.font.render(self.text,True,ftn_color)
+        #self.contain = pg.Rect(self.pos_x,self.pos_y,self.textRender.get_width(),self.textRender.get_height())
         return self.textRender
     
     def Render(self,screen):
         screen.blit(self.textRender, (self.pos_x,self.pos_y))      
+        #pg.draw.rect(screen,(255,0,0),self.contain,1)
 class Buttons:
     def __init__(self,pos_X,pos_Y,text = "Button",theme = None, **kwargs):
+
+        self.tema = theme
 
         if theme and theme in THEMES:
             thme = THEMES[theme]
@@ -50,7 +60,7 @@ class Buttons:
             self.color_hover = kwargs.get("color_hover",(200,200,200))
             self.color_shadow = kwargs.get("color_shadow",(80,80,80))
             self.color_border = kwargs.get("color_border",(70,70,70))
-            self.box_shadow = kwargs.get("box_shadow",1)
+            self.box_shadow = kwargs.get("box_shadow",0)
             self.padding_width = kwargs.get("padding_w",10)
             self.padding_hight = kwargs.get("padding_h",10)
             self.radius = kwargs.get("radius",2)
@@ -86,8 +96,22 @@ class Buttons:
         # 3. Lógica de click
         if self.hover:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+
+                if self.tema is None and self.box_shadow == 0:
+                    self.border_width = 2
+                    self.color_border = (80,80,255)
+                elif self.tema in THEMES and THEMES[self.tema].get('box_shadow') == 0:
+                    self.border_width = 2
+
                 self.pressed = True
             if event.type == pg.MOUSEBUTTONUP and event.button == 1:
+
+                if self.box_shadow == 0 and self.tema is None:
+                    self.border_width = 1
+                    self.color_border = (70,70,70)
+                elif self.tema in THEMES and THEMES[self.tema].get('box_shadow') == 0:
+                    self.border_width = 1
+
                 if self.pressed:
                     if param is not None:
                         func(param)
@@ -99,6 +123,12 @@ class Buttons:
         # Si el mouse sale del botón mientras estaba presionado, cancelamos
         if not self.hover and event.type == pg.MOUSEMOTION:
             self.pressed = False
+
+            if self.box_shadow == 0  and self.tema is None:
+                    self.border_width = 1
+                    self.color_border = (70,70,70)
+            elif self.tema in THEMES and THEMES[self.tema].get('box_shadow') == 0 :
+                    self.border_width = 1
             
         return False
 
