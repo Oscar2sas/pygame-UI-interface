@@ -1,138 +1,55 @@
 import pygame as pg
 import sys
 from widgets import *
-from Themes import THEMES
+from Themes import *
 
-class Ejemplos:
-    def __init__(self):
-        pg.init()
-        self.medidasVentana = (640, 400)
-        self.ventana = pg.display.set_mode(self.medidasVentana)
-        pg.display.set_caption("Pygame UI interfaces")
-        self.fps = pg.time.Clock()
-        self.ejecutando = True
-        
-        theme = "dark"
-        # Estado inicial
-        self.bkg_color = THEMES[theme].get("color")
+#variables de inicio de pygame
+pg.init()
+screen_size = (400,85)
+screen = pg.display.set_mode(screen_size)
+fps = pg.time.Clock()
+run = True
 
-        self.titulo = Label(theme=theme, text = "Esperando Accion",x = 10,y = 300,font_size = 23)
-
-        self.rectanguloMuestra = pg.Rect(300,10,50,50)
-        self.colorRectanguloMuestra = (200,80,80)
-        self.colorBordeMuestra = (200,200,200)
-
-        self.inputAncho = InputText(10,10,placeholder="Ancho",theme=theme) 
-        self.inputAlto = InputText(140,10,placeholder="Alto",theme=theme) 
-
-        self.botonCambiarTamaño = Buttons(10,50,"Cambiar Tamaño",theme=theme) 
-
-        self.sliderR = Slider(10,100,180,0,255,200,"Rojo",theme=theme)
-        self.sliderG = Slider(10,125,180,0,255,80,"Verde",theme=theme)
-        self.sliderB = Slider(10,150,180,0,255,80,"Azul",theme=theme)
-
-        listaOpciones = [
-            ("Relleno",1),
-            ("Borde",2),
-            ("Color de fondo",3)
-        ]
-
-        self.opciones = RadioGroup(15,180,listaOpciones,espacio=30,defaul=0,theme=theme)
-
-        self.chek = CheckBox(10,280,"Pantalla Completa",1,theme = theme)
-
-    def cambiar_tamaño(self):
-        if self.inputAlto.text == '' or self.inputAncho.text == '':
-            self.titulo.update_text('debes colocar ambos valores')
-            return 
-        else:
-            self.rectanguloMuestra = pg.Rect(300,10,int(self.inputAncho.text),int(self.inputAlto.text))
-            self.titulo.update_text('Se cambio el tamaño')
-
-    def set_sliders(self):
-        seleccion = self.opciones.ObtenerSeleccion()
-
-        if seleccion == 1:
-            color = self.colorRectanguloMuestra
-        elif seleccion == 2:
-            color = self.colorBordeMuestra
-        elif seleccion == 3:
-            color =  self.bkg_color
-        else:
-            return
-        
-        self.sliderR.set_pos(color[0])
-        self.sliderG.set_pos(color[1])
-        self.sliderB.set_pos(color[2])
-       
-    def manejar_eventos(self):
-        for evento in pg.event.get():
-            if evento.type == pg.QUIT:
-                self.ejecutando = False
-
-            self.inputAlto.check_active(evento)
-            self.inputAncho.check_active(evento)
-
-            self.botonCambiarTamaño.check_event(evento,self.cambiar_tamaño)
-
-            self.sliderR.checkEvent(evento)
-            self.sliderG.checkEvent(evento)
-            self.sliderB.checkEvent(evento)
-
-            if self.opciones.checkEvent(evento):
-                self.set_sliders()
-
-            if self.chek.checkEvent(evento):
-                if self.chek.state:
-                    pg.display.set_mode((0,0),pg.FULLSCREEN)
-                else:
-                    pg.display.set_mode(self.medidasVentana)
-
-            seleccion = self.opciones.ObtenerSeleccion()
-
-            self.colorActual = (self.sliderR.getPosition(),self.sliderG.getPosition(),self.sliderB.getPosition())
-            if seleccion == 1:    
-                self.colorRectanguloMuestra = self.colorActual
-            elif seleccion == 2:
-                self.colorBordeMuestra = self.colorActual
-            elif seleccion == 3:
-                self.bkg_color = self.colorActual
+color = (200,200,200)
 
 
-    def dibujar(self):
-        self.ventana.fill(self.bkg_color)
 
-        self.inputAlto.Render(self.ventana)
-        self.inputAncho.Render(self.ventana)
+#variables y componentes
+txt = InputText(70,10,'Nombre...')#Entrada de Texto
+txt_label = Label(x=10,y=10,font_size=15,text='Nombre:')#El texto por encima del Input
+btn_imprimir = Buttons(270,45,'Imprimir')#Boton para imprimir un mensaje
+btn_salir = Buttons(345,45,'Salir',border_color=(255,0,0))#Boton para salir
+nombre_label = Label(x=175,y=10,font_size=15,text='')#El Texto que contiene el nombre Introducido en el Input
 
-        self.botonCambiarTamaño.Render(self.ventana)
+#Lista con todos los elementos de la ventana
+components = [txt,txt_label,btn_imprimir,btn_salir,nombre_label]
 
-        self.sliderR.Render(self.ventana)
-        self.sliderG.Render(self.ventana)
-        self.sliderB.Render(self.ventana)
+#Funciones
+def MostrarNombre():
+    nombre_label.update_text(f'tu nombre es: {txt.text}')
+    return
 
-        self.opciones.Render(self.ventana)
+#bucle principal o "GameLoop"
+while run:
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            run = False 
 
-        self.chek.Render(self.ventana)
-        
+        #Chequeamos los eventos
+        txt.check_active(event)
+        btn_imprimir.check_event(event,MostrarNombre)
+        if btn_salir.check_event(event):
+            run = False
+
+    screen.fill(color)
+
+    #dibijamos los elementos de la lista de a 1
+    for com in components:
+        com.Render(screen)
+
+    pg.display.flip()
+    fps.tick(60)
 
 
-        pg.draw.rect(self.ventana,self.colorRectanguloMuestra,self.rectanguloMuestra,0,12)
-        pg.draw.rect(self.ventana,self.colorBordeMuestra,self.rectanguloMuestra,2,12)
-
-        self.titulo.Render(self.ventana)
-
-        pg.display.flip()
-
-    def ejecutar(self):
-        while self.ejecutando:
-            self.manejar_eventos()
-            self.dibujar()
-            self.fps.tick(60)
-        pg.quit()
-        sys.exit()
-
-if __name__ == "__main__":
-    app = Ejemplos()
-    app.ejecutar()
-
+pg.quit()
+sys.exit()
