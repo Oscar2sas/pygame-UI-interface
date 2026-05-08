@@ -6,6 +6,14 @@
 
 Una librería modular y ligera diseñada bajo el paradigma de **Programación Orientada a Objetos (POO)** para simplificar la creación de interfaces gráficas (GUI) en Pygame.
 
+## Indice
+Navega por este archivo encontrando lo que nesecitas.
+- Componentes:
+1. [Button](#button)
+2. [InputText](#inputtext)
+3. [RadioGroup](#radiogroup)
+4. [Slider](#button)
+5. [Checkbox](#button)
 ---
 
 ## 📸 Demo
@@ -51,7 +59,7 @@ color = (180,180, 180)
 #variables y componentes
 txt = InputText(70,10,'Nombre...')#Entrada de Texto
 txt_label = Label(x=10,y=10,font_size=15,text='Nombre:')#El texto por encima del Input
-btn_imprimir = Buttons(270,45,'Imprimir',theme=theme)#Boton para imprimir un mensaje
+btn_imprimir = Buttons(270,45,'Imprimir')#Boton para imprimir un mensaje
 btn_salir = Buttons(345,45,'Salir',border_color=(255,0,0))#Boton para salir
 nombre_label = Label(x=175,y=10,font_size=15,text='')#El Texto que contiene el nombre Introducido en el Input
 
@@ -93,17 +101,23 @@ sys.exit()
 
 ## 📖 Documentación de Componentes
 
-### `Button`
+### Button
 La clase base para interactividad táctil/ratón.
 - **Parámetros:** `x`, `y`, `width`, `height`, `text`, `color`.
 - **Métodos clave:** `draw(surface)`, `check_click(pos)`.
 
-### `InputText`
+### InputText
 Cuadro de entrada para capturar texto del usuario.
 - **Estado:** Maneja automáticamente el estado de "enfocado" al hacer click.
 
 ### `RadioGroup`
 Contenedor para múltiples opciones donde solo una puede estar activa.
+
+### Slider
+Seleccionar mediante un deslizador
+
+### CheckBox
+Una opcion para encender o apagar 
 
 ---
 
